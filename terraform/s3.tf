@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "www_bucket" {
-  bucket = "www.${var.bucket_name}"
-  tags = var.common_tags
+  bucket = "www-${var.bucket_name}"
+  tags   = var.common_tags
 }
 
 resource "aws_s3_bucket_policy" "www_bucket_policy" {
@@ -39,7 +39,7 @@ resource "aws_s3_bucket_website_configuration" "www_bucket_website_configuration
 # S3 bucket for redirecting non-www to www.
 resource "aws_s3_bucket" "root_bucket" {
   bucket = var.bucket_name
-  tags = var.common_tags
+  tags   = var.common_tags
 }
 
 resource "aws_s3_bucket_policy" "root_bucket_policy" {
