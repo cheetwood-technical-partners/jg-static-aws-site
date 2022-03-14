@@ -75,14 +75,14 @@ resource "aws_s3_bucket_versioning" "root_bucket_versioning" {
 }
 
 resource "aws_s3_bucket_object" "mp4_file_upload" {
-  bucket = var.bucket_name
+  bucket = "www-${var.bucket_name}"
   key    = "Garrison.Main.mp4"
   source = "${path.module}/files/Garrison.Main.mp4"
   etag   = "${filemd5("${path.module}/files/Garrison.Main.mp4")}"
 }
 
 resource "aws_s3_bucket_object" "index_file_upload" {
-  bucket = var.bucket_name
+  bucket = "www-${var.bucket_name}"
   key    = "index.html"
   source = "${path.module}/files/index.html"
   etag   = "${filemd5("${path.module}/files/index.html")}"

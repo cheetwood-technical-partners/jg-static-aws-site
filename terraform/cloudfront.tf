@@ -1,7 +1,7 @@
 # Cloudfront distribution for main s3 site.
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
-    domain_name = "garrison-gg.s3.amazonaws.com"
+    domain_name = "www.garrison-gg.s3.amazonaws.com"
     origin_id   = "S3-www-${var.bucket_name}"
 
     custom_origin_config {
