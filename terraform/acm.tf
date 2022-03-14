@@ -31,11 +31,6 @@ resource "aws_acm_certificate" "ssl_certification" {
   }
 }
 
-data "aws_route53_zone" "main" {
-  name         =  var.domain_name
-  private_zone = false
-}
-
 resource "aws_route53_record" "domain_validation" {
   for_each = {
     for dvo in aws_acm_certificate.ssl_certification.domain_validation_options : dvo.domain_name => {
@@ -50,7 +45,7 @@ resource "aws_route53_record" "domain_validation" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = data.aws_route53_zone.main.id
+  zone_id         = aws_route53_zone.main.zone_id
 }
 
 resource "aws_acm_certificate_validation" "domain_validation" {
