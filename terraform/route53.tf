@@ -3,26 +3,40 @@ resource "aws_route53_zone" "main" {
   tags = var.common_tags
 }
 
-resource "aws_route53_record" "root-a" {
+#resource "aws_route53_record" "root-a" {
+#  zone_id = aws_route53_zone.main.zone_id
+#  name    = var.domain_name
+#  type    = "A"
+#
+#  alias {
+#    name                   = aws_cloudfront_distribution.root_s3_distribution.domain_name
+#    zone_id                = aws_cloudfront_distribution.root_s3_distribution.hosted_zone_id
+#    evaluate_target_health = false
+#  }
+#}
+
+#resource "aws_route53_record" "www-a" {
+#  zone_id = aws_route53_zone.main.zone_id
+#  name    = "www.${var.domain_name}"
+#  type    = "A"
+#
+#  alias {
+#    name                   = aws_cloudfront_distribution.www_s3_distribution.domain_name
+#    zone_id                = aws_cloudfront_distribution.www_s3_distribution.hosted_zone_id
+#    evaluate_target_health = false
+#  }
+#}
+
+resource "aws_route53_record" "garrison_mx" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = var.domain_name
-  type    = "A"
-
-  alias {
-    name                   = aws_cloudfront_distribution.root_s3_distribution.domain_name
-    zone_id                = aws_cloudfront_distribution.root_s3_distribution.hosted_zone_id
-    evaluate_target_health = false
-  }
-}
-
-resource "aws_route53_record" "www-a" {
-  zone_id = aws_route53_zone.main.zone_id
-  name    = "www.${var.domain_name}"
-  type    = "A"
-
-  alias {
-    name                   = aws_cloudfront_distribution.www_s3_distribution.domain_name
-    zone_id                = aws_cloudfront_distribution.www_s3_distribution.hosted_zone_id
-    evaluate_target_health = false
-  }
+  name    = "garrison.gg"
+  type    = "MX"
+  ttl     = "600"
+  records = [
+    "10 ASPMX3.GOOGLEMAIL.COM.",
+    "5 ALT2.ASPMX.L.GOOGLE.COM.",
+    "10 ASPMX2.GOOGLEMAIL.COM.",
+    "5 ALT1.ASPMX.L.GOOGLE.COM.",
+    "1 ALT1.ASPMX.L.GOOGLE.COM."
+  ]
 }

@@ -5,7 +5,7 @@ resource "aws_s3_bucket" "www_bucket" {
 
 resource "aws_s3_bucket_policy" "www_bucket_policy" {
   bucket = aws_s3_bucket.www_bucket.id
-  policy = templatefile("templates/s3-policy.json", { bucket = var.bucket_name })
+  policy = templatefile("templates/s3-policy.json", { bucket = "www-${var.bucket_name }"})
 }
 
 
