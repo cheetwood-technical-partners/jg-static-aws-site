@@ -1,41 +1,34 @@
-## SSL Certificate
-##resource "aws_acm_certificate" "ssl_certificate" {
-##  provider                  = aws.acm_provider
-##  domain_name               = var.domain_name
-##  subject_alternative_names = ["*.${var.domain_name}"]
-##  validation_method         = "DNS"
-##  #validation_method = "DNS"
+### SSL Certificate
+###resource "aws_acm_certificate" "ssl_certificate" {
+###  provider                  = aws.acm_provider
+###  domain_name               = var.domain_name
+###  subject_alternative_names = ["*.${var.domain_name}"]
+###  validation_method         = "DNS"
+###  #validation_method = "DNS"
+###
+###  tags = var.common_tags
+###
+###  lifecycle {
+###    create_before_destroy = true
+###  }
+###}
 ##
-##  tags = var.common_tags
+### Uncomment the validation_record_fqdns line if you do DNS validation instead of Email.
+###resource "aws_acm_certificate_validation" "cert_validation" {
+###  provider        = aws.acm_provider
+###  certificate_arn = aws_acm_certificate.ssl_certificate.arn
+###  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+###}
 ##
-##  lifecycle {
-##    create_before_destroy = true
-##  }
-##}
-#
-## Uncomment the validation_record_fqdns line if you do DNS validation instead of Email.
-##resource "aws_acm_certificate_validation" "cert_validation" {
-##  provider        = aws.acm_provider
-##  certificate_arn = aws_acm_certificate.ssl_certificate.arn
-##  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
-##}
-#
-## ACM Cert, DNS Records, and Validation
+### ACM Cert, DNS Records, and Validation
 resource "aws_acm_certificate" "ssl_certification" {
+  provider        = aws.acm_provider
   domain_name = var.domain_name
-  #  subject_alternative_names = ["*.${var.domain_name}"]
+  subject_alternative_names = ["*.${var.domain_name}"]
   validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
   }
-  options {
-    certificate_transparency_logging_preference = "ENABLED"
-  }
-}
-
-data "aws_route53_zone" "main" {
-  name         = "garrison.gg"
-  private_zone = false
 }
 
 resource "aws_route53_record" "domain_validation" {
@@ -52,10 +45,11 @@ resource "aws_route53_record" "domain_validation" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = data.aws_route53_zone.main.id
+  zone_id         = aws_route53_zone.main.zone_id
 }
 
 resource "aws_acm_certificate_validation" "domain_validation" {
+  provider        = aws.acm_provider
   certificate_arn         = aws_acm_certificate.ssl_certification.arn
   validation_record_fqdns = [for record in aws_route53_record.domain_validation : record.fqdn]
 }
