@@ -36,6 +36,13 @@ resource "aws_s3_bucket_website_configuration" "www_bucket_website_configuration
 #  }
 }
 
+resource "aws_s3_bucket_versioning" "www_bucket_versioning" {
+  bucket = aws_s3_bucket.www_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 # S3 bucket for redirecting non-www to www.
 resource "aws_s3_bucket" "root_bucket" {
   bucket = var.bucket_name
@@ -57,6 +64,13 @@ resource "aws_s3_bucket_website_configuration" "root_bucket_website_configuratio
 
   redirect_all_requests_to {
     host_name = "https://www.${var.domain_name}"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "root_bucket_versioning" {
+  bucket = aws_s3_bucket.root_bucket.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
