@@ -1,9 +1,9 @@
 ### ACM Cert, DNS Records, and Validation
 resource "aws_acm_certificate" "ssl_certification" {
-  provider        = aws.acm_provider
-  domain_name = var.domain_name
+  provider                  = aws.acm_provider
+  domain_name               = var.domain_name
   subject_alternative_names = ["*.${var.domain_name}"]
-  validation_method = "DNS"
+  validation_method         = "DNS"
   lifecycle {
     create_before_destroy = true
   }
@@ -27,7 +27,7 @@ resource "aws_route53_record" "domain_validation" {
 }
 
 resource "aws_acm_certificate_validation" "domain_validation" {
-  provider        = aws.acm_provider
+  provider                = aws.acm_provider
   certificate_arn         = aws_acm_certificate.ssl_certification.arn
   validation_record_fqdns = [for record in aws_route53_record.domain_validation : record.fqdn]
 }

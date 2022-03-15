@@ -1,8 +1,8 @@
 # Cloudfront distribution for main s3 site.
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
-    domain_name = "www.garrison-gg.s3.amazonaws.com"
-    origin_id   = "S3-www-${var.bucket_name}"
+    domain_name = "www.${var.domain_name}.s3.us-west-2.amazonaws.com"
+    origin_id   = "S3-www.${var.bucket_name}"
 
     custom_origin_config {
       http_port              = 80
@@ -28,7 +28,7 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-www-${var.bucket_name}"
+    target_origin_id = "S3-www.${var.bucket_name}"
 
     forwarded_values {
       query_string = false
@@ -63,8 +63,8 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
 # Cloudfront S3 for redirect to www.
 resource "aws_cloudfront_distribution" "root_s3_distribution" {
   origin {
-    domain_name = "garrison-gg.s3.amazonaws.com"
-    origin_id   = "S3-${var.bucket_name}"
+    domain_name = "${var.domain_name}.s3.us-west-2.amazonaws.com"
+    origin_id   = "S3-.${var.bucket_name}"
     custom_origin_config {
       http_port              = 80
       https_port             = 443
@@ -81,7 +81,7 @@ resource "aws_cloudfront_distribution" "root_s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "S3-${var.bucket_name}"
+    target_origin_id = "S3-.${var.bucket_name}"
 
     forwarded_values {
       query_string = true
